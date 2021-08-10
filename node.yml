@@ -1,0 +1,64 @@
+# Playbook to configure node app with  required dependencies
+---
+
+- hosts: web
+  gather_facts: yes
+  become: true
+
+
+  tasks:
+    - name: "Add nodejs apt key"
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: "Install nodejs"
+      apt:
+       update_cache: yes
+       name: nodejs
+       state: present
+
+    - name: install npm
+      apt: pkg=npm state=present
+
+    - name: Install pm2
+      npm:
+        name: pm2
+        global: yes
+        production: yes
+        state: present
+
+    - name: Stop APP
+      shell: pm2 kill
+      args:
+        chdir: /home/vagrant/app/
+      ignore_errors: yes
+
+    - name: Start APP
+      shell: pm2 start app.js
+      args:
+        chdir: /home/vagrant/app/
+      ignore_errors: yes
+      state: present
+
+    - name: install npm
+      apt: pkg=npm state=present
+
+    - name: Install pm2
+      npm:
+        name: pm2
+        global: yes
+        production: yes
+        state: present
+
+    - name: Stop APP
+      shell: pm2 kill
+      args:
+        chdir: /home/vagrant/app/
+      ignore_errors: yes
+
+    - name: Start APP
+      shell: pm2 start app.js
+      args:
+        chdir: /home/vagrant/app/
+      ignore_errors: yes
