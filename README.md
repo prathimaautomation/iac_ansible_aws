@@ -1,4 +1,5 @@
-# Ifrastructure as code with Ansible on AWS
+# Infrastructure as code with Ansible on AWS
+![](Hybrid_ansible.png)
 ## Securing AWS keys with Ansible Vault
 - Ansible vault is a tool that is password proctect and generates an encrypted file where you can store keys.
 
