@@ -17,7 +17,7 @@ sudo apt install python3-pip - Python Package Manager
 cd /etc/ansible
 sudo apt install python3-pip
 sudo pip3 install awscli
-sudo pip3 install boto boto3
+sudo pip3 install boto boto3 botocore
 # Verify ansible aws module has been installed:
 aws --version
 # aws-cli/1.20.17 Python/3.6.9 Linux/4.15.0-151-generic botocore/1.21.17
@@ -42,6 +42,14 @@ aws_secret_key: THISISMYSECRETKEY
 # Once saved, all the content will be encrypted. To verify, type in the following:
 sudo cat pass.yml
 ```
+### Generate SSH key in your controller machine inside
+```
+~/.ssh/eng89_devops.pem 
+#generate a new pair of ssh keys (ssh-keygen -t rsa -b 4096 -f ~/.ssh/eng89_devops)
+~/.ssh/eng89_devops (this is the private key)
+~/.ssh/eng89_devops.pub
+sudo chmod 600 eng89_devops.pem
+```
 ## Creating EC2 instance with Ansible
 ### This playbook will launch and EC2 with specific configuration of VPC-Subnet-region with public IP enabled
 ```
@@ -56,10 +64,10 @@ cd ..
   vars:
     key_name: eng89_devops
     region: eu-west-1
-    image:  ami-05ddd896984ff509a
+    image:  ami-038d7b856fe7557b3
     id: "Ansilble lesson for AWS"
-    sec_group: "sg-0fe6f0cf3508eb5bc"
-    subnet_id: "subnet-0e9b6138ff1ce18f2"
+    sec_group: "sg-076b7682bb889a53e"
+    subnet_id: "subnet-0cde00dfe9c771258"
 # add the following line if ansible by default uses python 2.7
     ansible_python_interpreter: /usr/bin/python3
   tasks:
@@ -109,6 +117,16 @@ cd ..
 ### make sure you are in /etc/ansible folder and run the below command to create ec2 instance on aws (run playbooks on the cloud)
 `sudo ansible-playbook create_ec2.yml --ask-vault-pass --tags create_ec2`
 ### enter the password created for the vault
+### Now you will see amazing 'eng89_prathima_ansible_playbook' ec2 instance created and running.
+
+#### Ping the EC2 from the controller
+```
+# add the public ip address of the ec2 instance into hosts in the controller
+sudo nano hosts
+[aws]
+ec2-instance ansible_host=54.171.254.185 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng89_devops.pem
+# ping the ec2 instace
+
 ```
 ## Nginx reverse proxy playbook
   - nginx setup playbook on web with reverse proxy
